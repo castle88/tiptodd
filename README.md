@@ -25,5 +25,7 @@
 - touch .env
 
   / MONGODB_URI - your mongodb connection uri
+  
   / JWT_SECRET - super secret jwt key
+  
   / JWT_EXPIRE - duration of valid jwt
