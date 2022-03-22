@@ -14,16 +14,19 @@ const postRegister = async (req, res, next) => {
       return next(new Error("That email has already been registered"));
     }
 
-    await User.create({
+    const newUser = await User.create({
       username,
       email,
       password,
     });
 
+    const token = newUser.getSignedToken();
+
     res.status(200).json({
       success: true,
       message:
         "Your account has been successfully registered, Welcome to TipTODD",
+      token,
     });
   } catch (err) {
     console.log(err);
