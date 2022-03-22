@@ -2,8 +2,10 @@ const express = require("express");
 require("dotenv").config({ path: "./config/.env" });
 const port = process.env.PORT || 1337;
 const morgan = require("morgan");
+const connectDB = require("./config/database");
 
 const app = express();
+connectDB();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
