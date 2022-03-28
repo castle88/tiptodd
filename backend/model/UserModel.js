@@ -6,17 +6,20 @@ const crypto = require("crypto");
 const UserSchema = mongoose.Schema({
   username: {
     type: String,
-    unique: true,
+    unique: [true, "That username is already in use"],
     minLength: 4,
   },
   email: {
     type: String,
-    unique: true,
+    unique: [true, "That email address is not valid"],
   },
   password: {
     type: String,
     minLength: 6,
+    required: [true, "You need a password to login"],
   },
+  resetPasswordToken: String,
+  resetPasswordExpire: Date,
 });
 
 UserSchema.pre("save", async function (next) {
@@ -40,7 +43,17 @@ UserSchema.methods.getSignedToken = function () {
   );
 };
 
-// UserSchema.methods.getResetToken = function () {};
+UserSchema.methods.getResetToken = function () {
+  const reset = crypto.randomBytes(20).toString("hex");
+
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(reset)
+    .digest("hex");
+  this.resetPasswordExpire = Date.now() + 10 * (60 * 1000);
+
+  return reset;
+};
 
 const User = mongoose.model("User", UserSchema);
 
